@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Code Submission</title>
+  <style>
+     #outputBox {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-top: 10px;
+      height: 200px;
+      overflow-y: scroll;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <label for="codeInput">Enter your code:</label>
+    <br>
+    <textarea id="codeInput" rows="10" cols="50"></textarea>
+  </div>
+  <div>
+    <label for="languageSelect">Select a language:</label>
+    <select id="languageSelect">
+      <option value="javascript">JavaScript</option>
+      
+      <!-- Add more language options here -->
+    </select>
+  </div>
+  <br>
+  <button id="submitBtn">Submit</button>
+  <div id="outputBox"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const submitBtn = document.getElementById('submitBtn');
+      const codeInput = document.getElementById('codeInput');
+      const outputBox = document.getElementById('outputBox');
+
+      submitBtn.addEventListener('click', () => {
+        const codeInput = document.getElementById('codeInput');
+        const languageSelect = document.getElementById('languageSelect');
+        const userCode = codeInput.value;
+        const selectedLanguage=languageSelect.value;
+        if(userCode.trim()===''){
+          outputBox.innerText='please enter code before submitting';
+          return;
+        }else{
+          submitCode(userCode,selectedLanguage);
+          outputBox.innerText='';
+        }
+        // Send userCode to the backend API for processing
+      });
+    });
+
+    function submitCode(userCode,selectedLanguage) {
+      // Make a POST request to your backend API endpoint
+      // Example using Fetch API
+      fetch('/submit-code', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code: userCode, language:selectedLanguage })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.message); // Success message from the server
+        // Handle success or show feedback to the user
+      })
+      .catch(error => {
+        outputBox.innerText='an error occured.please try again.';
+        // Handle error or show error message to the user
+      });
+    }
+  </script>
+</body>
+</html>
