@@ -6,7 +6,6 @@ const path=require("path");
 const WebSocket = require("ws");
 const {publishFunction}=require("./publisher")
 const { setupOutputListener } = require("./outputListener");
-const {subscribeToReplyQueue}=require("./outputGenerater");
 const { consumerFunction } = require("./consumers/consumer_node");
 
 app.use(express.urlencoded({ extended: true }));

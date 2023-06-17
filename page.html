@@ -78,6 +78,8 @@
   const outputBox = document.getElementById('outputBox');
   fetchOutput();
 
+  setInterval(fetchOutput,2000);
+
   function fetchOutput() {
     fetch('/output')
       .then(response => response.text())
