@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <title>Code Submission</title>
   <style>
      #outputBox {
@@ -9,6 +10,7 @@
       margin-top: 10px;
       height: 200px;
       overflow-y: scroll;
+      color: black;
     }
   </style>
 </head>
@@ -72,6 +74,21 @@
         // Handle error or show error message to the user
       });
     }
+    document.addEventListener('DOMContentLoaded', () => {
+  const outputBox = document.getElementById('outputBox');
+  fetchOutput();
+
+  function fetchOutput() {
+    fetch('/output')
+      .then(response => response.text())
+      .then(output => {
+        outputBox.textContent = output;
+      })
+      .catch(error => {
+        console.error('Error retrieving output:', error);
+      });
+  }
+});
   </script>
 </body>
 </html>

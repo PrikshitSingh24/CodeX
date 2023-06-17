@@ -78,6 +78,7 @@ function runJavaScriptCode(userCode) {
         console.error(`JavaScript Error: ${stderr}`);
       } else {
         console.log(`JavaScript Output: \n ${stdout}`);
+        publishOutput(stdout,channel);
       }
       
       cleanupContainer();
@@ -87,6 +88,25 @@ function runJavaScriptCode(userCode) {
       
 
     });
+
+    async function publishOutput(output) {
+      try {
+        const connection = await amqp.connect('amqp://localhost:5672');
+        const channel = await connection.createChannel();
+        const outputExchange = 'output_exchange'; // Specify the name of the output exchange
+        const queue = 'output_queue'; // Specify the name of the output queue
+    
+        await channel.assertExchange(outputExchange, 'direct', { durable: false });
+        await channel.assertQueue(queue);
+        await channel.bindQueue(queue, outputExchange, '');
+    
+        const message = Buffer.from(output);
+        channel.publish(outputExchange, '', message);
+        console.log('Output published successfully');
+      } catch (error) {
+        console.error('Error publishing output:', error);
+      }
+    }
 
 
     function cleanupContainer() {
