@@ -4,7 +4,7 @@ const amqp=require("amqplib");
 const router=express.Router();
 const path=require("path");
 const WebSocket = require("ws");
-const {publishFunction}=require("./publisher")
+const {publishFunction}=require("./publisher/publisher")
 const { setupOutputListener } = require("./outputListener");
 const { consumerFunction } = require("./consumers/consumer_node");
 
