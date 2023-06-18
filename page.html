@@ -24,6 +24,7 @@
     <label for="languageSelect">Select a language:</label>
     <select id="languageSelect">
       <option value="javascript">JavaScript</option>
+      <option value="python">python</option>
       
       <!-- Add more language options here -->
     </select>
@@ -66,7 +67,9 @@
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data.message); // Success message from the server
+        console.log(data.message);
+        
+         // Success message from the server
         // Handle success or show feedback to the user
       })
       .catch(error => {
@@ -76,9 +79,10 @@
     }
     document.addEventListener('DOMContentLoaded', () => {
   const outputBox = document.getElementById('outputBox');
+ 
   fetchOutput();
 
-  setInterval(fetchOutput,2000);
+  setInterval(fetchOutput, 2000); 
 
   function fetchOutput() {
     fetch('/output')
