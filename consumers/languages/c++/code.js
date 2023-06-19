@@ -7,21 +7,21 @@ const { dirname } = require("path");
 const path = require('path');
 
 
-function runJavaScriptCode(userCode) {
-    const scriptPath = path.join(__dirname, 'user_code.js');
+function runCplusplusCode(userCode) {
+    const scriptPath = path.join(__dirname, 'user_code.cpp');
     fs.writeFileSync(scriptPath, userCode);
   
-    const containerName = `javascript-exec-container-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
+    const containerName = `cplusplus-exec-container-${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
     const dockerfilePath = path.join(__dirname, 'Dockerfile');
     const imageName = 'my-custom-image';
   
     // Generate the Dockerfile dynamically
     const dockerfileContent = `
-      FROM node:14
+      FROM gcc:4.9
       WORKDIR /app
-      COPY consumers/languages/javascript/user_code.js /app/user_code.js
+      COPY consumers/languages/c++/user_code.cpp /app/user_code.cpp
       USER nobody
-      CMD ["node", "user_code.js"]
+      CMD ["sh", "-c", "g++ user_code.cpp -o user_code -std=c++11 && ./user_code"]
     `;
   
     fs.writeFileSync(dockerfilePath, dockerfileContent);
@@ -46,16 +46,16 @@ function runJavaScriptCode(userCode) {
     function runDockerContainer() {
       const scriptDirectory = path.resolve(__dirname).replace(/\\/g, '/');
       const volumeMount = `"${scriptDirectory}:/app"`;
-      const command = `docker run --rm --name ${containerName} -v ${volumeMount} --user node ${imageName}`;
+      const command = `docker run --rm --name ${containerName} -v ${volumeMount} --user nobody ${imageName}`;
       exec(command, (error, stdout, stderr) => {
         if (error) {
           const errorMessage = extractErrorMessage(error.message);
-          console.error(`JavaScript Error: ${error.message}`);
+          console.error(`C++ error: ${error.message}`);
           publishOutput(errorMessage);
         } else if (stderr) {
-          console.error(`JavaScript Error: ${stderr}`);
+          console.error(`C++ error: ${stderr}`);
         } else {
-          console.log(`JavaScript Output: \n ${stdout}`);
+          console.log(`C++ output: \n ${stdout}`);
           publishOutput(stdout);
         }
         
@@ -71,7 +71,7 @@ function runJavaScriptCode(userCode) {
         let errorMessage = '';
       
         if (errorLines.length >= 4) {
-          errorMessage = errorLines.slice(2).map(line => line.trim()).join('');
+          errorMessage = errorLines.slice(1).map(line => line.trim()).join('');
         }
       
         return errorMessage;
@@ -111,5 +111,5 @@ function runJavaScriptCode(userCode) {
 
 
   module.exports={
-    runJavaScriptCode
+    runCplusplusCode
   }

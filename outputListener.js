@@ -10,13 +10,12 @@ async function setupOutputListener(app) {
     await channel.assertExchange(outputExchange, "direct", { durable: false });
     await channel.assertQueue(queue);
     await channel.bindQueue(queue, outputExchange, "");
-
     channel.consume(queue, (message) => {
       const output = message.content.toString();
       console.log("the output is retrieved!!");
       console.log(`Output: ${output}`);
       app.locals.output = output; // Store the output in app.locals for later retrieval
-      channel.ack(message);
+       channel.ack(message);
     });
   } catch (error) {
     console.error(error);

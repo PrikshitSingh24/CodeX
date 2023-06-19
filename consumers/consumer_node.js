@@ -5,6 +5,7 @@ const { channel } = require("diagnostics_channel");
 const fs = require('fs');
 const { dirname } = require("path");
 const path = require('path');
+const { runCplusplusCode } = require("./languages/c++/code");
 const {runJavaScriptCode}=require('./languages/javascript/code');
 const { runPythonCode } = require("./languages/python/code");
 
@@ -25,6 +26,9 @@ async function consumerFunction() {
         case 'python':
           runPythonCode(userCode);
           break;  
+        case 'c++':
+          runCplusplusCode(userCode);
+          break;   
         default:
           console.error(`Unsupported language: ${language}`);
           break;

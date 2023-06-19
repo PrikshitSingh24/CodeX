@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <title>Code Submission</title>
   <style>
      #outputBox {
@@ -23,8 +22,9 @@
   <div>
     <label for="languageSelect">Select a language:</label>
     <select id="languageSelect">
-      <option value="javascript">JavaScript</option>
+      <option value="javascript">JavaScript</option>S
       <option value="python">python</option>
+      <option value="c++">c++</option>
       
       <!-- Add more language options here -->
     </select>
@@ -77,12 +77,13 @@
         // Handle error or show error message to the user
       });
     }
+    
     document.addEventListener('DOMContentLoaded', () => {
   const outputBox = document.getElementById('outputBox');
  
   fetchOutput();
 
-  setInterval(fetchOutput, 2000); 
+  setInterval(fetchOutput, 1000); 
 
   function fetchOutput() {
     fetch('/output')

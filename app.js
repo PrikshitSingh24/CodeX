@@ -3,7 +3,6 @@ const app=express();
 const amqp=require("amqplib");
 const router=express.Router();
 const path=require("path");
-const WebSocket = require("ws");
 const {publishFunction}=require("./publisher/publisher")
 const { setupOutputListener } = require("./outputListener");
 const { consumerFunction } = require("./consumers/consumer_node");
@@ -11,9 +10,11 @@ const { consumerFunction } = require("./consumers/consumer_node");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+
 router.get('/',(req,res)=>{
     res.sendFile(path.join(__dirname+'/page.html'));
 });
+
 app.use('/',router);
 
 router.post('/submit-code',async(req,res)=>{
@@ -32,13 +33,14 @@ router.post('/submit-code',async(req,res)=>{
 
 consumerFunction();
 
+
 setupOutputListener(app);
 
-
 router.get("/output", (req, res) => {
-    const output = req.app.locals.output;
-    res.send(output);
+    let output = req.app.locals.output;
+        res.send(output);  
   });
+
 
 
 // Function to send output to all connected clients

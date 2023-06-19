@@ -49,12 +49,14 @@ function runPythonCode(userCode) {
       const command = `docker run --rm --name ${containerName} -v ${volumeMount} --user root ${imageName}`;
       exec(command, (error, stdout, stderr) => {
         if (error) {
+          const errorMessage = extractErrorMessage(error.message);
           console.error(`Python error: ${error.message}`);
+          publishOutput(errorMessage);
         } else if (stderr) {
           console.error(`Python error: ${stderr}`);
         } else {
           console.log(`Python output: \n ${stdout}`);
-          publishOutput(stdout,channel);
+          publishOutput(stdout);
         }
         
         cleanupContainer();
@@ -64,6 +66,16 @@ function runPythonCode(userCode) {
         
   
       });
+      function extractErrorMessage(fullErrorMessage) {
+        const errorLines = fullErrorMessage.trim().split('\n');
+        let errorMessage = '';
+      
+        if (errorLines.length >= 4) {
+          errorMessage = errorLines.slice(2).map(line => line.trim()).join('');
+        }
+      
+        return errorMessage;
+      }
   
       async function publishOutput(output) {
         try {
